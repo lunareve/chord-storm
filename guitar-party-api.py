@@ -1,4 +1,5 @@
 import requests
+import os
 
 # URL Only returns a single URI
 # If need to search multiple songs, need to remove the '/' at the end of the URL
@@ -6,10 +7,10 @@ import requests
 VERSION = '0.1'
 URL = 'http://api.guitarparty.com/v2/%(resource)s/'
 QUERY = 'http://api.guitarparty.com/v2/%(resource)s'
-API_KEY = 'e7829b22224fa082e9eaa3a865ba5a18df9f062d'
+API_KEY = os.environ['GUITAR_PARTY_API_KEY']
 
 def request(resource, **params):
-    """Returns JSON from a single URI (song, artist, or chord)."""
+    """Returns JSON from a single URI (songs, artists, or chords)."""
     options = {
         'headers': {
             'Guitarparty-Api-Key': API_KEY,
@@ -21,7 +22,7 @@ def request(resource, **params):
 
 
 def query(resource, **params):
-    """Returns a JSON list from a query."""
+    """Returns JSON objects from a query."""
     options = {
         'headers': {
             'Guitarparty-Api-Key': API_KEY,
@@ -35,12 +36,18 @@ def query(resource, **params):
 def format_search(search_term):
     """Replace any spaces with '+'."""
 
-    pass
+    search_term = search_term.strip()
+    search_split = search_term.split(' ')
+    return '+'.join(search_split)
 
 
 def query_songs(search_term):
-    """Get a list of songs. Search term must have '+' instead of spaces."""
-    songs = query('songs/?query={}'.format(search_term))
+    """Get JSON objects of songs. Search term must have '+' instead of spaces."""
+
+    return query('songs/?query={}'.format(format_search(search_term)))
+
+
+def extract_songs():
 
     pass
 

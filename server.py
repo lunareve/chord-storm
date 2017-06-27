@@ -7,6 +7,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
 
+import guitar-party-api as gp
+
 
 app = Flask(__name__)
 
@@ -104,8 +106,8 @@ def log_user_out():
 
 
 @app.route("/songs")
-def song_list():
-    """Shows the list of songs."""
+def song_search():
+    """Searches for songs based on chords."""
     songs = song.query.order_by(song.title).all()
     return render_template("song_list.html", songs=songs)
 
