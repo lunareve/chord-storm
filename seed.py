@@ -1,14 +1,13 @@
-"""Utility file to seed ratings database from MovieLens data in seed_data/"""
+"""Utility file to seed favorites database from SongLens data in seed_data/"""
 
 from sqlalchemy import func
-from datetime import datetime
 
-from model import User
-from model import Rating
-from model import Movie
+from model import User, Artist, Song, Chord, Chord_List, Favorite
 
 from model import connect_to_db, db
 from server import app
+
+import guitar-party-api as gp
 
 
 def load_users():
@@ -36,15 +35,15 @@ def load_users():
     db.session.commit()
 
 
-def load_movies():
-    """Load movies from u.item into database."""
-    print "Movies"
+def load_songs():
+    """Load songs from u.item into database."""
+    print "Songs"
 
-    Movie.query.delete()
+    Song.query.delete()
 
     for row in open("seed_data/u.item"):
         row = row.rstrip()
-        movie_id, title, release_date, vid_release_date, imdb_url = row.split("|")[:5]
+        song_id, title, release_date, vid_release_date, imdb_url = row.split("|")[:5]
         title = title[:-7]
 
         if release_date:
@@ -52,31 +51,31 @@ def load_movies():
         else:
             released_at = None
 
-        movie = Movie(movie_id=movie_id,
+        song = Song(song_id=song_id,
                       title=title,
                       released_at=released_at,
                       imdb_url=imdb_url)
 
-        db.session.add(movie)
+        db.session.add(song)
 
     db.session.commit()
 
 
-def load_ratings():
-    """Load ratings from u.data into database."""
-    print "Ratings"
+def load_favorites():
+    """Load favorites from u.data into database."""
+    print "Favorites"
 
-    Rating.query.delete()
+    Favorite.query.delete()
 
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, movie_id, score, timestamp = row.split("\t")
+        user_id, song_id, score, timestamp = row.split("\t")
 
-        rating = Rating(user_id=user_id,
-                        movie_id=movie_id,
+        favorite = Favorite(user_id=user_id,
+                        song_id=song_id,
                         score=score)
 
-        db.session.add(rating)
+        db.session.add(favorite)
 
     db.session.commit()
 
@@ -102,6 +101,6 @@ if __name__ == "__main__":
 
     # Import different types of data
     load_users()
-    load_movies()
-    load_ratings()
+    load_songs()
+    load_favorites()
     set_val_user_id()

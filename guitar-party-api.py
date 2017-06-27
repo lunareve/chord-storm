@@ -3,6 +3,7 @@ import os
 
 # URL Only returns a single URI
 # If need to search multiple songs, need to remove the '/' at the end of the URL
+# Remember to source secrets.sh for API key.
 
 VERSION = '0.1'
 URL = 'http://api.guitarparty.com/v2/%(resource)s/'

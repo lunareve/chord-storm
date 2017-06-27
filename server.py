@@ -5,7 +5,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Artist, Song, Chord, Chord_List, Favorite
 
 import guitar-party-api as gp
 
