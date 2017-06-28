@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 
-from model import User, Artist, Song, Chord, Chord_List, Favorite
+from model import User, Artist, ArtistSong, Song, Chord, ChordList, Favorite
 
 from model import connect_to_db, db
 from server import app
@@ -35,16 +35,46 @@ def load_users():
     db.session.commit()
 
 
+def load_chords():
+    """Load chords from file into database."""
+    print "Chords"
+
+    Chord.query.delete()
+
+        chord = Chord(chord_code=chord_code,
+                      instrument=instrument,
+                      image_url=image_url)
+
+        db.session.add(chord)
+
+    db.session.commit()
+
+
+def load_artists():
+    """Load artists from Guitar Party API into database."""
+    print "Artists"
+
+    Artist.query.delete()
+
+        artist = Artist(artist_id=artist_id,
+                        name=name)
+
+        db.session.add(artist)
+
+    db.session.commit()
+
+
 def load_songs():
-    """Load songs from u.item into database."""
+    """Load songs from Guitar Party API into database."""
     print "Songs"
 
     Song.query.delete()
 
         song = Song(song_id=song_id,
-                      title=title,
-                      released_at=released_at,
-                      imdb_url=imdb_url)
+                    title=title,
+                    body=body,
+                    body_chords_html=body_chords_html,
+                    permalink=permalink)
 
         db.session.add(song)
 
@@ -59,10 +89,46 @@ def load_favorites():
 
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, song_id, score, timestamp = row.split("\t")
+        user_id, song_id = row.split("\t")
 
         favorite = Favorite(user_id=user_id,
-                        song_id=song_id)
+                            song_id=song_id)
+
+        db.session.add(favorite)
+
+    db.session.commit()
+
+
+def load_chord_list():
+    """Load chord list from u.data into database."""
+    print "Chord List"
+
+    ChordList.query.delete()
+
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        chord_code, song_id = row.split("\t")
+
+        cl = ChordList(chord_code=chord_code,
+                       song_id=song_id)
+
+        db.session.add(cl)
+
+    db.session.commit()
+
+
+def load_artists_songs():
+    """Load artists songs from u.data into database."""
+    print "Artists Songs"
+
+    ArtistSong.query.delete()
+
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        artist_id, song_id = row.split("\t")
+
+        favorite = Favorite(artist_id=artist_id,
+                            song_id=song_id)
 
         db.session.add(favorite)
 

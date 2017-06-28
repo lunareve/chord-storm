@@ -55,8 +55,8 @@ class ArtistSong(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        s = "<ArtistSong id=%s artist_id=%s song_id=%s>"
-        return s % (self.id, self.artist_id, self.song_id)
+        s = "<ArtistSong artist_song_id=%s artist_id=%s song_id=%s>"
+        return s % (self.artist_song_id, self.artist_id, self.song_id)
 
 
 class Chord(db.Model):
@@ -71,7 +71,7 @@ class Chord(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Chord code=%s>" % (self.code)
+        return "<Chord chord_code=%s>" % (self.chord_code)
 
 
 class ChordList(db.Model):
@@ -81,13 +81,13 @@ class ChordList(db.Model):
 
     chord_list_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
-    chord = db.Column(db.String, db.ForeignKey('chords.code'), nullable=False)
+    chord_code = db.Column(db.String, db.ForeignKey('chords.chord_code'), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        s = "<ChordList chord_list_id=%s song_id=%s chord=%s>"
-        return s % (self.chord_list_id, self.song_id, self.chord)
+        s = "<ChordList chord_list_id=%s song_id=%s chord_code=%s>"
+        return s % (self.chord_list_id, self.song_id, self.chord_code)
 
 
 class Favorite(db.Model):
