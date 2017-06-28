@@ -40,31 +40,23 @@ class Artist(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Artist artist_id=%s name=%s>" % (self.artist_id,
-                                              self.name)
+                                                  self.name)
 
 
-class Song(db.Model):
-    """Song of chord finder website."""
+class ArtistSong(db.Model):
+    """Artist song association table of chord finder website."""
 
-    __tablename__ = "songs"
+    __tablename__ = "artists_songs"
 
-    song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    artist_id = db.Column(db.ForeignKey('artists.artist_id', nullable=False))
-    body = db.Column(db.Blob, nullable=True)
-    body_chords_html = db.Column(db.Blob, nullable=True)
-    permalink = db.Column(db.String(200), nullable=True)
-
-    # Define relationship to artist
-    artist = db.relationship("Artist",
-                             backref=db.backref("songs",
-                                                order_by=song_id))
+    artist_song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
+    artist_id = db.Column(db.String, db.ForeignKey('artists.artists_id'), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Song song_id=%s title=%s>" % (self.song_id,
-                                               self.title)
+        s = "<ArtistSong id=%s artist_id=%s song_id=%s>"
+        return s % (self.id, self.artist_id, self.song_id)
 
 
 class Chord(db.Model):
@@ -72,7 +64,7 @@ class Chord(db.Model):
 
     __tablename__ = "chords"
 
-    code = db.Column(db.String(10), primary_key=True)
+    chord_code = db.Column(db.String(10), primary_key=True)
     instrument = db.Column(db.String(20), nullable=True)
     image_url = db.Column(db.String(150), nullable=True)
 
@@ -82,7 +74,7 @@ class Chord(db.Model):
         return "<Chord code=%s>" % (self.code)
 
 
-class Chord_List(db.Model):
+class ChordList(db.Model):
     """Chord list of chord finder website."""
 
     __tablename__ = "chord_list"
@@ -91,20 +83,10 @@ class Chord_List(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
     chord = db.Column(db.String, db.ForeignKey('chords.code'), nullable=False)
 
-    # Define relationship to chord
-    chord = db.relationship("Chord",
-                            backref=db.backref("chord_list",
-                                               order_by=chord_list_id))
-
-    # Define relationship to song
-    song = db.relationship("Song",
-                           backref=db.backref("chord_list",
-                                              order_by=chord_list_id))
-
     def __repr__(self):
-        """Provide helpful representation of Favorite when printed."""
+        """Provide helpful representation when printed."""
 
-        s = "<Chord List chord_list_id=%s song_id=%s chord=%s>"
+        s = "<ChordList chord_list_id=%s song_id=%s chord=%s>"
         return s % (self.chord_list_id, self.song_id, self.chord)
 
 
@@ -117,22 +99,44 @@ class Favorite(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
-    # Define relationship to user
-    user = db.relationship("User",
-                           backref=db.backref("favorites",
-                                              order_by=favorite_id))
-
-    # Define relationship to song
-    song = db.relationship("Song",
-                            backref=db.backref("favorites",
-                                               order_by=favorite_id))
-
     def __repr__(self):
-        """Provide helpful representation of Favorite when printed."""
+        """Provide helpful representation when printed."""
 
         s = "<Favorite favorite_id=%s song_id=%s user_id=%s>"
         return s % (self.favorite_id, self.song_id, self.user_id)
 
+
+class Song(db.Model):
+    """Song of chord finder website."""
+
+    __tablename__ = "songs"
+
+    song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    body = db.Column(db.Text, nullable=True)
+    body_chords_html = db.Column(db.Text, nullable=True)
+    permalink = db.Column(db.String(200), nullable=True)
+
+    # Define relationship to Artist
+    artists = db.relationship("Artist",
+                              secondary="artists_songs",
+                              backref="songs")
+
+    # Define relationship to Chord
+    chords = db.relationship("Chord",
+                             secondary="chord_list",
+                             backref="songs")
+
+    # Define relationship to Favorite
+    favorites = db.relationship("User",
+                                secondary="favorites",
+                                backref="songs")
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Song song_id=%s title=%s>" % (self.song_id,
+                                               self.title)
 
 
 ##############################################################################

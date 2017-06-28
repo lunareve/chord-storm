@@ -7,7 +7,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Artist, Song, Chord, Chord_List, Favorite
 
-import guitar-party-api as gp
+import guitar_party_api as gp
 
 
 app = Flask(__name__)

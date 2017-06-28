@@ -7,7 +7,7 @@ from model import User, Artist, Song, Chord, Chord_List, Favorite
 from model import connect_to_db, db
 from server import app
 
-import guitar-party-api as gp
+import guitar_party_api as gp
 
 
 def load_users():
@@ -25,8 +25,8 @@ def load_users():
         user_id, age, gender, occupation, zipcode = row.split("|")
 
         user = User(user_id=user_id,
-                    age=age,
-                    zipcode=zipcode)
+                    email=email,
+                    password=password)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(user)
@@ -40,16 +40,6 @@ def load_songs():
     print "Songs"
 
     Song.query.delete()
-
-    for row in open("seed_data/u.item"):
-        row = row.rstrip()
-        song_id, title, release_date, vid_release_date, imdb_url = row.split("|")[:5]
-        title = title[:-7]
-
-        if release_date:
-            released_at = datetime.strptime(release_date, "%d-%b-%Y")
-        else:
-            released_at = None
 
         song = Song(song_id=song_id,
                       title=title,
@@ -72,8 +62,7 @@ def load_favorites():
         user_id, song_id, score, timestamp = row.split("\t")
 
         favorite = Favorite(user_id=user_id,
-                        song_id=song_id,
-                        score=score)
+                        song_id=song_id)
 
         db.session.add(favorite)
 
@@ -100,7 +89,7 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    load_users()
+    # load_users()
     load_songs()
-    load_favorites()
-    set_val_user_id()
+    # load_favorites()
+    # set_val_user_id()
