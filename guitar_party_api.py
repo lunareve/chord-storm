@@ -48,10 +48,22 @@ def query_songs(search_term):
     return query('songs/?query={}'.format(format_search(search_term)))
 
 
-def extract_songs():
+def unwrap_songs(search_term):
+    """Input: JSON search results from query songs
+       Output: List of song objects"""
 
-    pass
+    song_list = []
+    search_results = query_songs(search_term)
+    for song in search_results['objects']:
+        song_list.append(song)
 
+    return song_list
+
+
+# querying by songbook doesn't work
+# the link is broken in the API docs
+# but the following songbook has some good songs
+# songbook = request('songbooks/12884')
 
 over_the_rainbow = request('songs/365')
 chords_dict = over_the_rainbow['chords']

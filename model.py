@@ -33,7 +33,7 @@ class Artist(db.Model):
 
     __tablename__ = "artists"
 
-    artist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    artist_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
@@ -50,7 +50,7 @@ class ArtistSong(db.Model):
 
     artist_song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
-    artist_id = db.Column(db.String, db.ForeignKey('artists.artists_id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -74,20 +74,20 @@ class Chord(db.Model):
         return "<Chord chord_code=%s>" % (self.chord_code)
 
 
-class ChordList(db.Model):
+class SongChord(db.Model):
     """Chord list of chord finder website."""
 
-    __tablename__ = "chord_list"
+    __tablename__ = "songs_chords"
 
-    chord_list_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    song_chord_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
     chord_code = db.Column(db.String, db.ForeignKey('chords.chord_code'), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        s = "<ChordList chord_list_id=%s song_id=%s chord_code=%s>"
-        return s % (self.chord_list_id, self.song_id, self.chord_code)
+        s = "<SongChord song_chord_id=%s song_id=%s chord_code=%s>"
+        return s % (self.song_chord_id, self.song_id, self.chord_code)
 
 
 class Favorite(db.Model):
@@ -111,7 +111,7 @@ class Song(db.Model):
 
     __tablename__ = "songs"
 
-    song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    song_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     body = db.Column(db.Text, nullable=True)
     body_chords_html = db.Column(db.Text, nullable=True)
@@ -124,7 +124,7 @@ class Song(db.Model):
 
     # Define relationship to Chord
     chords = db.relationship("Chord",
-                             secondary="chord_list",
+                             secondary="songs_chords",
                              backref="songs")
 
     # Define relationship to Favorite

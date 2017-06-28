@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 
-from model import User, Artist, ArtistSong, Song, Chord, ChordList, Favorite
+from model import User, Artist, ArtistSong, Song, Chord, SongChord, Favorite
 
 from model import connect_to_db, db
 from server import app
@@ -41,9 +41,13 @@ def load_chords():
 
     Chord.query.delete()
 
-        chord = Chord(chord_code=chord_code,
-                      instrument=instrument,
-                      image_url=image_url)
+    for row in open("seed_data/u.chords"):
+        row = row.rstrip()
+        chord_list = gp.unwrap_songs(row)
+
+        chord = Chord(chord_code=chord_list['code'],
+                      instrument=chord_list['instrument'],
+                      image_url=chord_list['image_url'])
 
         db.session.add(chord)
 
@@ -56,27 +60,44 @@ def load_artists():
 
     Artist.query.delete()
 
-        artist = Artist(artist_id=artist_id,
-                        name=name)
+    for row in open("seed_data/u.test"):
+        row = row.rstrip()
+        song_list = gp.unwrap_songs(row)
 
-        db.session.add(artist)
+        for item in song_list:
+            authors_list = item['authors']
+
+            for author in authors_list:
+                artist_id = author['uri'].split('/')[-2]
+                name = author['name']
+
+                artist = Artist(artist_id=artist_id,
+                                name=name)
+
+                db.session.add(artist)
 
     db.session.commit()
 
 
 def load_songs():
-    """Load songs from Guitar Party API into database."""
+    """Search songs from u.time with Guitar Party API and load into database."""
     print "Songs"
 
     Song.query.delete()
 
-        song = Song(song_id=song_id,
-                    title=title,
-                    body=body,
-                    body_chords_html=body_chords_html,
-                    permalink=permalink)
+    for row in open("seed_data/u.test"):
+        row = row.rstrip()
+        song_list = gp.unwrap_songs(row)
 
-        db.session.add(song)
+        for item in song_list:
+
+            song = Song(song_id=item['id'],
+                        title=item['title'],
+                        body=item['body'],
+                        body_chords_html=item['body_chords_html'],
+                        permalink=item['permalink'])
+
+            db.session.add(song)
 
     db.session.commit()
 
@@ -127,10 +148,10 @@ def load_artists_songs():
         row = row.rstrip()
         artist_id, song_id = row.split("\t")
 
-        favorite = Favorite(artist_id=artist_id,
+        artsong = Favorite(artist_id=artist_id,
                             song_id=song_id)
 
-        db.session.add(favorite)
+        db.session.add(artsong)
 
     db.session.commit()
 
