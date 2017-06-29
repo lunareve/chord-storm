@@ -39,49 +39,48 @@ def load_chords(song_list):
     """Load chords from Guitar Party API into database."""
     print "Chords"
 
-    Chord.query.delete()
-
     for item in song_list:
         chord_list = item['chords']
 
         for chord in chord_list:
-            instrument = chord['instrument']
 
-            chrd = Chord(chord_code=chord['name'],
-                         instrument=instrument['safe_name'],
-                         image_url=chord['image_url'])
+            if Chord.query.filter_by(chord_code=chord['code']).first() == None:
+                instrument = chord['instrument']
 
-            db.session.add(chrd)
+                chrd = Chord(chord_code=chord['code'],
+                             name=chord['name'],
+                             instrument=instrument['safe_name'])
 
-    db.session.commit()
+                db.session.add(chrd)
+
+        db.session.commit()
 
 
 def load_artists(song_list):
     """Load artists from Guitar Party API into database."""
     print "Artists"
 
-    Artist.query.delete()
-
     for item in song_list:
         authors_list = item['authors']
 
+        # Make a set of all authors in a song to remove duplicates
+        # go through each item in the set to make Artist objects
+
         for author in authors_list:
-            artist_id = author['uri'].split('/')[-2]
-            name = author['name']
+            art_id = author['uri'].split('/')[-2]
 
-            artist = Artist(artist_id=artist_id,
-                            name=name)
+            if Artist.query.filter_by(artist_id=art_id).first() == None:
 
-            db.session.add(artist)
+                artist = Artist(artist_id=art_id,
+                                name=author['name'])
 
-    db.session.commit()
+                db.session.add(artist)
+                db.session.commit()
 
 
 def load_songs(song_list):
     """Load songs from Guitar Party API into database."""
     print "Songs"
-
-    Song.query.delete()
 
     for item in song_list:
 
@@ -118,14 +117,12 @@ def load_songs_chords(song_list):
     """Load chords of a song from Guitar Party API into database."""
     print "Songs Chords"
 
-    SongChord.query.delete()
-
     for item in song_list:
         chord_list = item['chords']
 
         for chord in chord_list:
 
-            sc = SongChord(chord_code=chord['name'],
+            sc = SongChord(chord_code=chord['code'],
                            song_id=item['id'])
 
             db.session.add(sc)
@@ -136,8 +133,6 @@ def load_songs_chords(song_list):
 def load_artists_songs(song_list):
     """Load artists associated with a song from Guitar Party API into database."""
     print "Artists Songs"
-
-    ArtistSong.query.delete()
 
     for item in song_list:
         authors_list = item['authors']
@@ -156,6 +151,14 @@ def load_artists_songs(song_list):
 def seed_file():
     """Search songs from u.test with Guitar Party API
     to get back JSON to plug into load functions."""
+
+    # Delete all rows in tables, so if we need to run this a second time,
+    # we won't be trying to add duplicates
+    SongChord.query.delete()
+    ArtistSong.query.delete()
+    Song.query.delete()
+    Artist.query.delete()
+    Chord.query.delete()
 
     for row in open("seed_data/u.test"):
         row = row.rstrip()

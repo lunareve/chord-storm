@@ -65,13 +65,14 @@ class Chord(db.Model):
     __tablename__ = "chords"
 
     chord_code = db.Column(db.String(10), primary_key=True)
+    name = db.Column(db.String(10), nullable=False)
     instrument = db.Column(db.String(20), nullable=True)
-    image_url = db.Column(db.String(150), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Chord chord_code=%s>" % (self.chord_code)
+        return "<Chord chord_code=%s name=%s>" % (self.chord_code,
+                                                  self.name)
 
 
 class SongChord(db.Model):
@@ -81,7 +82,7 @@ class SongChord(db.Model):
 
     song_chord_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
-    chord_code = db.Column(db.String, db.ForeignKey('chords.chord_code'), nullable=False)
+    chord_code = db.Column(db.String(10), db.ForeignKey('chords.chord_code'), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
