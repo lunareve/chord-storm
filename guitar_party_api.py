@@ -43,7 +43,7 @@ def format_search(search_term):
 
 
 def query_songs(search_term):
-    """Get JSON objects of songs. Search term must have '+' instead of spaces."""
+    """Get JSON objects of songs."""
 
     return query('songs/?query={}'.format(format_search(search_term)))
 
@@ -72,8 +72,8 @@ def unwrap_songs(search_term):
 # songbook = request('songbooks/12884')
 
 over_the_rainbow = request('songs/365')
-chords_dict = over_the_rainbow['chords']
+chords_list = over_the_rainbow['chords']
 chord_names = []
 
-for chord in chords_dict:
+for chord in chords_list:
     chord_names.append(chord['name'])

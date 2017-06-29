@@ -35,46 +35,44 @@ def load_users():
     db.session.commit()
 
 
-def load_chords():
-    """Load chords from file into database."""
+def load_chords(song_list):
+    """Load chords from Guitar Party API into database."""
     print "Chords"
 
     Chord.query.delete()
 
-    for row in open("seed_data/u.chords"):
-        row = row.rstrip()
-        chord_list = gp.unwrap_songs(row)
+    for item in song_list:
+        chord_list = item['chords']
 
-        chord = Chord(chord_code=chord_list['code'],
-                      instrument=chord_list['instrument'],
-                      image_url=chord_list['image_url'])
+        for chord in chord_list:
+            instrument = chord['instrument']
 
-        db.session.add(chord)
+            chrd = Chord(chord_code=chord['name'],
+                         instrument=instrument['safe_name'],
+                         image_url=chord['image_url'])
+
+            db.session.add(chrd)
 
     db.session.commit()
 
 
-def load_artists():
+def load_artists(song_list):
     """Load artists from Guitar Party API into database."""
     print "Artists"
 
     Artist.query.delete()
 
-    for row in open("seed_data/u.test"):
-        row = row.rstrip()
-        song_list = gp.unwrap_songs(row)
+    for item in song_list:
+        authors_list = item['authors']
 
-        for item in song_list:
-            authors_list = item['authors']
+        for author in authors_list:
+            artist_id = author['uri'].split('/')[-2]
+            name = author['name']
 
-            for author in authors_list:
-                artist_id = author['uri'].split('/')[-2]
-                name = author['name']
+            artist = Artist(artist_id=artist_id,
+                            name=name)
 
-                artist = Artist(artist_id=artist_id,
-                                name=name)
-
-                db.session.add(artist)
+            db.session.add(artist)
 
     db.session.commit()
 
@@ -116,51 +114,58 @@ def load_favorites():
     db.session.commit()
 
 
-def load_chord_list():
-    """Load chord list from u.data into database."""
-    print "Chord List"
+def load_songs_chords(song_list):
+    """Load chords of a song from Guitar Party API into database."""
+    print "Songs Chords"
 
-    ChordList.query.delete()
+    SongChord.query.delete()
 
-    for row in open("seed_data/u.data"):
-        row = row.rstrip()
-        chord_code, song_id = row.split("\t")
+    for item in song_list:
+        chord_list = item['chords']
 
-        cl = ChordList(chord_code=chord_code,
-                       song_id=song_id)
+        for chord in chord_list:
 
-        db.session.add(cl)
+            sc = SongChord(chord_code=chord['name'],
+                           song_id=item['id'])
+
+            db.session.add(sc)
 
     db.session.commit()
 
 
-def load_artists_songs():
-    """Load artists songs from u.data into database."""
+def load_artists_songs(song_list):
+    """Load artists associated with a song from Guitar Party API into database."""
     print "Artists Songs"
 
     ArtistSong.query.delete()
 
-    for row in open("seed_data/u.data"):
-        row = row.rstrip()
-        artist_id, song_id = row.split("\t")
+    for item in song_list:
+        authors_list = item['authors']
 
-        artsong = Favorite(artist_id=artist_id,
-                            song_id=song_id)
+        for author in authors_list:
+            artist_id = author['uri'].split('/')[-2]
 
-        db.session.add(artsong)
+            artsong = ArtistSong(artist_id=artist_id,
+                                 song_id=item['id'])
+
+            db.session.add(artsong)
 
     db.session.commit()
 
 
 def seed_file():
-    """Search songs from u.time with Guitar Party API
+    """Search songs from u.test with Guitar Party API
     to get back JSON to plug into load functions."""
 
     for row in open("seed_data/u.test"):
         row = row.rstrip()
         song_list = gp.unwrap_songs(row)
 
-
+        load_songs(song_list)
+        load_artists(song_list)
+        load_chords(song_list)
+        load_songs_chords(song_list)
+        load_artists_songs(song_list)
 
 
 def set_val_user_id():
@@ -182,8 +187,8 @@ if __name__ == "__main__":
     # In case tables haven't been created, create them
     db.create_all()
 
-    # Import different types of data
+    # Import JSON data and seed to different tables
+    seed_file()
     # load_users()
-    load_songs()
     # load_favorites()
     # set_val_user_id()
