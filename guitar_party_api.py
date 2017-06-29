@@ -48,6 +48,12 @@ def query_songs(search_term):
     return query('songs/?query={}'.format(format_search(search_term)))
 
 
+def query_chords(search_term):
+    """Get JSON objects of chords."""
+
+    return query('chords/?query={}'.format(search_term))
+
+
 def unwrap_songs(search_term):
     """Input: JSON search results from query songs
        Output: List of song objects"""

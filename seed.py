@@ -79,25 +79,21 @@ def load_artists():
     db.session.commit()
 
 
-def load_songs():
-    """Search songs from u.time with Guitar Party API and load into database."""
+def load_songs(song_list):
+    """Load songs from Guitar Party API into database."""
     print "Songs"
 
     Song.query.delete()
 
-    for row in open("seed_data/u.test"):
-        row = row.rstrip()
-        song_list = gp.unwrap_songs(row)
+    for item in song_list:
 
-        for item in song_list:
+        song = Song(song_id=item['id'],
+                    title=item['title'],
+                    body=item['body'],
+                    body_chords_html=item['body_chords_html'],
+                    permalink=item['permalink'])
 
-            song = Song(song_id=item['id'],
-                        title=item['title'],
-                        body=item['body'],
-                        body_chords_html=item['body_chords_html'],
-                        permalink=item['permalink'])
-
-            db.session.add(song)
+        db.session.add(song)
 
     db.session.commit()
 
@@ -154,6 +150,17 @@ def load_artists_songs():
         db.session.add(artsong)
 
     db.session.commit()
+
+
+def seed_file():
+    """Search songs from u.time with Guitar Party API
+    to get back JSON to plug into load functions."""
+
+    for row in open("seed_data/u.test"):
+        row = row.rstrip()
+        song_list = gp.unwrap_songs(row)
+
+
 
 
 def set_val_user_id():
