@@ -63,19 +63,17 @@ def load_artists(song_list):
     for item in song_list:
         authors_list = item['authors']
 
-        # Make a set of all authors in a song to remove duplicates
-        # go through each item in the set to make Artist objects
-
         for author in authors_list:
             art_id = author['uri'].split('/')[-2]
 
             if Artist.query.filter_by(artist_id=art_id).first() == None:
 
                 artist = Artist(artist_id=art_id,
-                                name=author['name'])
+                                name=author['name'].strip())
 
                 db.session.add(artist)
-                db.session.commit()
+
+        db.session.commit()
 
 
 def load_songs(song_list):

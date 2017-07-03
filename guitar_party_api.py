@@ -71,9 +71,9 @@ def unwrap_songs(search_term):
 # but the following songbook has some good songs
 # songbook = request('songbooks/12884')
 
-over_the_rainbow = request('songs/365')
-chords_list = over_the_rainbow['chords']
-chord_names = []
+# over_the_rainbow = request('songs/365')
+# chords_list = over_the_rainbow['chords']
+# chord_names = []
 
-for chord in chords_list:
-    chord_names.append(chord['name'])
+# for chord in chords_list:
+#     chord_names.append(chord['name'])

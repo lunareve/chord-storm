@@ -9,6 +9,8 @@ from model import connect_to_db, db, User, Artist, ArtistSong, Song, Chord, Song
 
 import guitar_party_api as gp
 
+from chord_helper import find_songs_with_n_chords, find_songs_chords
+
 
 app = Flask(__name__)
 
@@ -105,10 +107,15 @@ def log_user_out():
     return redirect("/")
 
 
-@app.route("/songs")
-def song_search():
+@app.route("/songs", methods=["GET"])
+def song_search(chord_string):
     """Searches for songs based on chords."""
-    songs = song.query.order_by(song.title).all()
+
+    # convert input chord string to unicode list
+    unicode_chords = (unicode(chord_string, "utf-8")).replace(",", " ").strip()
+    chord_list = unicode_chords.split()
+
+    songs = find_songs_chords(chord_list)
     return render_template("song_list.html", songs=songs)
 
 
@@ -117,18 +124,9 @@ def song_details(song_id):
     """Shows a song's details."""
 
     song = song.query.get(song_id)
-    song_favorites = song.favorites
-    user_favorites = []
-    users = []
-
-    for favorite in song_favorites:
-        user_favorites.append((favorite.user_id, favorite.score))
-        users.append(favorite.user_id)
 
     return render_template("song_details.html",
-                           song=song,
-                           user_favorites=user_favorites,
-                           users=users)
+                           song=song)
 
 
 @app.route("/songs/<song_id>", methods=["POST"])

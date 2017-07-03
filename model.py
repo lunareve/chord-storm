@@ -1,4 +1,4 @@
-"""Models and database functions for Favorites project."""
+"""Models and database functions for chord finder project."""
 
 from flask_sqlalchemy import SQLAlchemy
 
