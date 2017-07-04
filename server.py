@@ -9,7 +9,7 @@ from model import connect_to_db, db, User, Artist, ArtistSong, Song, Chord, Song
 
 import guitar_party_api as gp
 
-from chord_helper import find_songs_with_n_chords, find_songs_chords
+from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info
 
 
 app = Flask(__name__)
@@ -27,7 +27,12 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     a = jsonify([1, 3])
-    return render_template('homepage.html')
+
+    songs3 = find_songs_with_n_chords(3)
+    songs_list = extract_song_info(songs3)
+
+    return render_template('homepage.html',
+                           songs_list=songs_list)
 
 
 @app.route("/users/<user_id>", methods=["GET"])
@@ -108,8 +113,10 @@ def log_user_out():
 
 
 @app.route("/songs", methods=["GET"])
-def song_search(chord_string):
+def song_search():
     """Searches for songs based on chords."""
+
+    chord_string = request.form.get("chord_string")
 
     # convert input chord string to unicode list
     unicode_chords = (unicode(chord_string, "utf-8")).replace(",", " ").strip()
