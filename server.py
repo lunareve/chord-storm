@@ -118,8 +118,8 @@ def song_search():
 
     chord_string = request.args.get("chord_string")
 
-    chord_format = chord_string.replace(",", " ").strip().title()
-    chord_list = chord_format.split()
+    chord_format = chord_string.replace(",", " ").strip()
+    chord_list = [word[0].upper() + word[1:] for word in chord_format.split()]
 
     songs = find_songs_chords(chord_list)
     songs_list = extract_song_info(songs)

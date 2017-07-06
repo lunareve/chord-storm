@@ -39,7 +39,7 @@
     <ul>
       {% for chords in popular %}
         <li>
-          <a href="/songs?chord_string={{ chords[0]|join('+') }}">{{ chords[0]|join(', ') }} ({{ chords[1] }})</a>
+          <a href="/songs?chord_string={{ chords[0]|join('+')|replace('#','%23') }}">{{ chords[0]|join(', ') }} ({{ chords[1] }})</a>
         </li>
       {% endfor %}
     </ul>
@@ -48,7 +48,7 @@
     <ul>
       {% for chords in shortest %}
         <li>
-          <a href="/songs?chord_string={{ chords|join('+') }}">{{ chords|join(', ') }}</a>
+          <a href="/songs?chord_string={{ chords|join('+')|replace('#','%23') }}">{{ chords|join(', ') }}</a>
         </li>
       {% endfor %}
     </ul>
