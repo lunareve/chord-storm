@@ -116,21 +116,22 @@ def log_user_out():
 def song_search():
     """Searches for songs based on chords."""
 
-    chord_string = request.form.get("chord_string")
+    chord_string = request.args.get("chord_string")
 
-    # convert input chord string to unicode list
-    unicode_chords = (unicode(chord_string, "utf-8")).replace(",", " ").strip()
-    chord_list = unicode_chords.split()
+    chord_format = chord_string.replace(",", " ").strip().title()
+    chord_list = chord_format.split()
 
     songs = find_songs_chords(chord_list)
-    return render_template("song_list.html", songs=songs)
+    songs_list = extract_song_info(songs)
+
+    return render_template("song_chords.html", songs_list=songs_list)
 
 
 @app.route("/songs/<song_id>", methods=["GET"])
 def song_details(song_id):
     """Shows a song's details."""
 
-    song = song.query.get(song_id)
+    song = Song.query.get(song_id)
 
     return render_template("song_details.html",
                            song=song)

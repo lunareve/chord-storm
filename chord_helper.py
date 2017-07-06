@@ -41,6 +41,14 @@ def find_songs_chords(chord_list):
     return chord_songs
 
 
+def query_chord_sets():
+    """Searches the db for popular sets of chords."""
+
+    chord_sets = db.session.query(Song.chords, db.func.count(Song.chords)).group_by(Song.chords).all()
+
+    return chord_sets
+
+
 def extract_song_info(song_objects):
     """ Takes a list of song objects and extracts song id, title, artists, and chords.
     Returns these as a list of tuples.

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ song.title }}</h2>
+
+<h4>Artists: {% for artist in song.artists %}
+  {% if loop.last %}
+    {{ artist.name }}
+  {% else %}
+    {{ artist.name }},
+  {% endif %}
+{% endfor %}
+</h4>
+
+<h4>Chords: {% for chord in song.chords %}
+  {% if loop.last %}
+    {{ chord.name }}
+  {% else %}
+    {{ chord.name }},
+  {% endif %}
+{% endfor %}
+</h4>
+
+<div>
+  {{ song.body_chords_html|safe }}
+</div>
+
+{% endblock %}
