@@ -2,6 +2,7 @@
 
 from model import User, Artist, ArtistSong, Song, Chord, SongChord, Favorite
 from model import connect_to_db, db
+import operator
 
 
 def find_songs_with_n_chords(n):
@@ -41,12 +42,50 @@ def find_songs_chords(chord_list):
     return chord_songs
 
 
-def query_chord_sets():
-    """Searches the db for popular sets of chords."""
+def query_chord_combos():
+    """Searches the db for popular combinations of chords.
+    Returns a dictionary with chord tuples as keys and counts as values."""
 
-    chord_sets = db.session.query(Song.chords, db.func.count(Song.chords)).group_by(Song.chords).all()
+    chord_combos = {}
+
+    all_songs = Song.query.options(db.joinedload('chords')).all()
+
+    for song in all_songs:
+
+        songs_chords = []
+        for chord in song.chords:
+            songs_chords.append(chord.name)
+
+        songs_chords.sort()
+        chord_key = tuple(songs_chords)
+        chord_combos[chord_key] = chord_combos.get(chord_key, 0) + 1
 
     return chord_sets
+
+
+def most_chord_combos():
+    """Finds chord combinations used by the most songs.
+    Returns a list of tuples."""
+
+    chord_combos = query_chord_combos()
+    sorted_chords = sorted(chord_combos.items(), key=operator.itemgetter(1), reverse=True)
+
+    return sorted_chords[:5]
+
+
+def shortest_chord_combos():
+    """Finds chord combinations with the shortest amount of chords.
+    Returns a list of tuples."""
+
+    short_chords = []
+    chord_combos = query_chord_combos()
+
+    for key in chord_combos:
+        if len(key) < 5:
+            short_chords.append(key)
+
+    short_chords.sort(key=len)
+    return short_chords
 
 
 def extract_song_info(song_objects):
