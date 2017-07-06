@@ -9,7 +9,7 @@ from model import connect_to_db, db, User, Artist, ArtistSong, Song, Chord, Song
 
 import guitar_party_api as gp
 
-from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info
+from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info, most_chord_combos, shortest_chord_combos
 
 
 app = Flask(__name__)
@@ -123,8 +123,13 @@ def song_search():
 
     songs = find_songs_chords(chord_list)
     songs_list = extract_song_info(songs)
+    popular = most_chord_combos()
+    shortest = shortest_chord_combos()
 
-    return render_template("song_chords.html", songs_list=songs_list)
+    return render_template("song_chords.html",
+                           songs_list=songs_list,
+                           popular=popular,
+                           shortest=shortest)
 
 
 @app.route("/songs/<song_id>", methods=["GET"])

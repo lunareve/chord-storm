@@ -60,7 +60,7 @@ def query_chord_combos():
         chord_key = tuple(songs_chords)
         chord_combos[chord_key] = chord_combos.get(chord_key, 0) + 1
 
-    return chord_sets
+    return chord_combos
 
 
 def most_chord_combos():

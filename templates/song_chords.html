@@ -15,18 +15,44 @@
   </div>
 
 <h3>Search Results:</h3>
-  <ul>
-    {% for song in songs_list %}
-      <li>
 
-        <a href="/songs/{{ song[0] }}">{{ song[1] }}</a><br>
+  {% if songs_list %}
+    <ul>
+      {% for song in songs_list %}
+        <li>
 
-        Artists: {{ song[2]|join(', ') }}<br>
+          <a href="/songs/{{ song[0] }}">{{ song[1] }}</a><br>
 
-        Chords: {{ song[3]|join(', ') }}<br>
+          Artists: {{ song[2]|join(', ') }}<br>
 
-      </li>
-    {% endfor %}
-  </ul>
+          Chords: {{ song[3]|join(', ') }}<br>
+
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    No results? Try searching the following:
+    <br><br>
+
+    Popular Chords:
+    <ul>
+      {% for chords in popular %}
+        <li>
+          <a href="/songs?chord_string={{ chords[0]|join('+') }}">{{ chords[0]|join(', ') }} ({{ chords[1] }})</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    Fewer Chords:
+    <ul>
+      {% for chords in shortest %}
+        <li>
+          <a href="/songs?chord_string={{ chords|join('+') }}">{{ chords|join(', ') }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% endif %}
 
 {% endblock %}
