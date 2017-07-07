@@ -5,6 +5,24 @@ from model import connect_to_db, db
 import operator
 
 
+def search_by_title(term):
+    """Searches the db for songs using song title."""
+
+    return Song.query.filter(Song.title.ilike('%{}%'.format(term))).all()
+
+
+def search_by_artist(term):
+    """Searches the db for songs using artist name."""
+
+    results = []
+    artist = Artist.query.filter(Artist.name.ilike('%{}%'.format(term))).all()
+
+    for i in artist:
+        results.extend(i.songs)
+
+    return results
+
+
 def find_songs_with_n_chords(n):
     """Seaches the db for songs with n chords.
     Returns list of song objects."""

@@ -9,7 +9,7 @@ from model import connect_to_db, db, User, Artist, ArtistSong, Song, Chord, Song
 
 import guitar_party_api as gp
 
-from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info, most_chord_combos, shortest_chord_combos
+from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info, most_chord_combos, shortest_chord_combos, search_by_title, search_by_artist
 
 
 app = Flask(__name__)
