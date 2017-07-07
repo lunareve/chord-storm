@@ -37,10 +37,20 @@ def find_songs_with_n_chords(n):
     return n_chord_songs
 
 
-def find_songs_chords(chord_list):
+def format_chord_string(chord_string):
+    """Formats a chord string to db searchable list."""
+
+    chord_format = chord_string.replace(",", " ").strip()
+    chord_list = [word[0].upper() + word[1:] for word in chord_format.split()]
+
+    return chord_list
+
+
+def find_songs_chords(chord_string):
     """Seaches the db for songs with specific chord names.
     Returns list of song objects."""
 
+    chord_list = format_chord_string(chord_string)
     chord_list.sort()
 
     chord_songs = []

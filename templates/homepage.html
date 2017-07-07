@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Search by Chords</h2>
+<h2>Search Songs</h2>
   <div>
     <form action="/songs" method="GET">
-
-      <label>Chords:
+      <label>Search by chords:
         <input type="text" name="chord_string">
       </label>
-
       <input type="submit">
+    </form>
 
+    <form action="/songs" method="GET">
+      <label>Search by song title:
+        <input type="text" name="title_string">
+      </label>
+      <input type="submit">
+    </form>
+
+    <form action="/songs" method="GET">
+      <label>Search by artist:
+        <input type="text" name="artist_string">
+      </label>
+      <input type="submit">
     </form>
   </div>
 

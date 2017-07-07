@@ -117,11 +117,18 @@ def song_search():
     """Searches for songs based on chords."""
 
     chord_string = request.args.get("chord_string")
+    title_string = request.args.get("title_string")
+    artist_string = request.args.get("artist_string")
 
-    chord_format = chord_string.replace(",", " ").strip()
-    chord_list = [word[0].upper() + word[1:] for word in chord_format.split()]
+    if chord_string:
+        songs = find_songs_chords(chord_string)
 
-    songs = find_songs_chords(chord_list)
+    elif title_string:
+        songs = search_by_title(title_string)
+
+    elif artist_string:
+        songs = search_by_artist(artist_string)
+
     songs_list = extract_song_info(songs)
     popular = most_chord_combos()
     shortest = shortest_chord_combos()
@@ -176,7 +183,5 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-
-
 
     app.run(port=5000, host='0.0.0.0')
