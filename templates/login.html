@@ -5,16 +5,36 @@
 
 <form action="/login" method="POST">
 
-    <label>Email address:
-      <input type="email" name="email">
-    </label>
+  <label>Email address:
+    <input type="email" name="email">
+  </label>
 
-    <label>Password:
-      <input type="password" name="password">
-    </label>
+  <label>Password:
+    <input type="password" name="password">
+  </label>
 
-    <input type="submit">
-    
-  </form>
+  <input type="submit">
+
+</form>
+
+<h2>New? Register for an account!</h2>
+
+<form action="/register" method="POST">
+
+  <label>Email address:
+    <input type="email" name="email">
+  </label>
+
+  <label>Password:
+    <input type="password" name="password">
+  </label>
+
+  <label>Retype password:
+    <input type="password" name="verify">
+  </label>
+
+  <input type="submit">
+
+</form>
 
 {% endblock %}

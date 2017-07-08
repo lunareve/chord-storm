@@ -38,9 +38,12 @@
 <script src="http://code.jquery.com/jquery.js"></script>
 
 <script type="text/javascript">
-  $('#search_type').on('change', function(){
+  $('#search_type').on('change', set_search_type);
+  $('#search_type').on('pageshow', set_search_type);
+
+  function set_search_type() {
     $('#search_box').attr('name', $('#search_type').val());
-  });
+  }
 </script>
 
 {% endblock %}

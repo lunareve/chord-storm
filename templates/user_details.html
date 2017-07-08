@@ -3,16 +3,11 @@
 
   <h2>User {{ user.user_id }}</h2>
 
+  Favorites:
   <ul>
-    <li>{{ user.age }}</li>
-    <li>{{ user.zipcode }}</li>
-  </ul>
-
-  Rated Movies:
-  <ul>
-    {% for user_movie, user_score in user_movies %}
+    {% for song in user_songs %}
       <li>
-        {{ user_movie }}: {{ user_score }}
+        {{ song }}
       </li>
     {% endfor %}
   </ul>

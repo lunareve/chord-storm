@@ -42,19 +42,14 @@ def user_details(user_id):
     user = User.query.get(user_id)
     user_favorites = user.favorites
     user_songs = []
-    for favorite in user_favorites:
-        user_songs.append((favorite.song.title, favorite.score))
+
+    if user_favorites:
+        for favorite in user_favorites:
+            user_songs.append(favorite.songs.title)
 
     return render_template("user_details.html",
                            user=user,
                            user_songs=user_songs)
-
-
-@app.route("/register", methods=["GET"])
-def register_form():
-    """Shows a registration form for user email address and password."""
-
-    return render_template("registration_form.html")
 
 
 @app.route("/register", methods=["POST"])
@@ -63,9 +58,13 @@ def register_process():
     # Check for existing user
     email = request.form.get("email")
     password = request.form.get("password")
+    verify = request.form.get("verify")
 
     if User.query.filter(User.email == email).first():
         flash('Email already exists, please login.')
+
+    elif password != verify:
+        flash('Passwords do not match, please try again.')
 
     else:
         user = User(email=email, password=password)
@@ -78,7 +77,7 @@ def register_process():
 
 @app.route("/login", methods=["GET"])
 def login_form():
-    """Allows the user to enter login info."""
+    """Allows the user to enter login or registration info."""
 
     return render_template("login.html")
 
