@@ -2,30 +2,35 @@
 <html>
 <head>
     <title>Chord Finder</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/chordfinder.css" rel="stylesheet">
 </head>
 <body>
-  <h1><a href="/">Chord Finder</a></h1>
-  <hr>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  {% endwith %}
+  <div class=container>
+    <h1><a href="/">Chord Finder</a></h1>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
 
 
-  {% if session %}
-    <a href="/logout">Logout</a>
-  {% else %}
-    <a href="/login">Login</a>
-  {% endif %}
+    {% if session %}
+      <a href="/logout">Logout</a>
+    {% else %}
+      <a href="/login">Login</a>
+    {% endif %}
 
 
 
-  {% block content %} put your content here {% endblock %}
+    {% block content %} put your content here {% endblock %}
+
+  </div>
 
 </body>
 </html>

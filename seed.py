@@ -44,7 +44,7 @@ def load_chords(song_list):
 
         for chord in chord_list:
 
-            if Chord.query.filter_by(chord_code=chord['code']).first() == None:
+            if chord['code'] != 'none' and Chord.query.filter_by(chord_code=chord['code']).first() == None:
                 instrument = chord['instrument']
 
                 chrd = Chord(chord_code=chord['code'],
@@ -82,13 +82,15 @@ def load_songs(song_list):
 
     for item in song_list:
 
-        song = Song(song_id=item['id'],
-                    title=item['title'],
-                    body=item['body'],
-                    body_chords_html=item['body_chords_html'],
-                    permalink=item['permalink'])
+        if Song.query.filter_by(song_id=item['id']).first() == None:
 
-        db.session.add(song)
+            song = Song(song_id=item['id'],
+                        title=item['title'],
+                        body=item['body'],
+                        body_chords_html=item['body_chords_html'],
+                        permalink=item['permalink'])
+
+            db.session.add(song)
 
     db.session.commit()
 
@@ -119,11 +121,12 @@ def load_songs_chords(song_list):
         chord_list = item['chords']
 
         for chord in chord_list:
+            if chord['code'] != 'none':
 
-            sc = SongChord(chord_code=chord['code'],
-                           song_id=item['id'])
+                sc = SongChord(chord_code=chord['code'],
+                               song_id=item['id'])
 
-            db.session.add(sc)
+                db.session.add(sc)
 
     db.session.commit()
 
@@ -158,7 +161,7 @@ def seed_file():
     Artist.query.delete()
     Chord.query.delete()
 
-    for row in open("seed_data/u.test"):
+    for row in open("seed_data/u.item"):
         row = row.rstrip()
         song_list = gp.unwrap_songs(row)
 

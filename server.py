@@ -40,16 +40,20 @@ def user_details(user_id):
     """Shows a user's details."""
 
     user = User.query.get(user_id)
-    user_favorites = user.favorites
     user_songs = []
 
-    if user_favorites:
-        for favorite in user_favorites:
-            user_songs.append(favorite.songs.title)
+    try:
+        for favorite in user.favorites:
+            user_songs.append(favorite.songs)
+
+    except AttributeError:
+        print "no favorites"
+
+    songs_list = extract_song_info(user_songs)
 
     return render_template("user_details.html",
                            user=user,
-                           user_songs=user_songs)
+                           songs_list=songs_list)
 
 
 @app.route("/register", methods=["POST"])
@@ -148,27 +152,46 @@ def song_details(song_id):
                            song=song)
 
 
-@app.route("/songs/<song_id>", methods=["POST"])
-def rate_song(song_id):
-    """Allows user to add or update favorite for a song."""
+@app.route("/songs/add_fav.json", methods=['POST'])
+def add_favorite():
+    """Add favorited song to db."""
 
-    song_score = request.form.get("score")
-    current_song = song_id
+    song_id = int(request.form.get('song_id'))
     current_user = session['user']
 
-    favorite_exist = db.session.query(favorite).filter(favorite.user_id==current_user,
-                                                         favorite.song_id==current_song).first()
+    # add data to db that song is a favorite
+    new_favorite = Favorite(song_id=song_id, user_id=current_user)
+    db.session.add(new_favorite)
+    db.session.commit()
+    print "adding song_id {} as favorite in db".format(song_id)
 
-    #if user_id exists, update score column in favorites table
-    if favorite_exist:
-        favorite_exist.score = song_score
-        db.session.commit()
-    else:
-        new_favorite = favorite(song_id=current_song, user_id=current_user, score=song_score)
-        db.session.add(new_favorite)
-        db.session.commit()
+    return jsonify({
+        'success': True,
+        'song_id': song_id
+        })
 
-    return redirect("/songs/{}".format(current_song))
+
+# @app.route("/songs/<song_id>", methods=["POST"])
+# def rate_song(song_id):
+#     """Allows user to add or update favorite for a song."""
+
+#     song_score = request.form.get("score")
+#     current_song = song_id
+#     current_user = session['user']
+
+#     favorite_exist = db.session.query(favorite).filter(favorite.user_id==current_user,
+#                                                        favorite.song_id==current_song).first()
+
+#     #if user_id exists, update score column in favorites table
+#     if favorite_exist:
+#         favorite_exist.score = song_score
+#         db.session.commit()
+#     else:
+#         new_favorite = favorite(song_id=current_song, user_id=current_user, score=song_score)
+#         db.session.add(new_favorite)
+#         db.session.commit()
+
+#     return redirect("/songs/{}".format(current_song))
 
 
 

@@ -5,9 +5,15 @@
 
   Favorites:
   <ul>
-    {% for song in user_songs %}
+    {% for song in songs_list %}
       <li>
-        {{ song }}
+
+        <a href="/songs/{{ song[0] }}">{{ song[1] }}</a><br>
+
+        Artists: {{ song[2]|join(', ') }}<br>
+
+        Chords: {{ song[3]|join(', ') }}<br>
+
       </li>
     {% endfor %}
   </ul>

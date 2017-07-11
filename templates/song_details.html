@@ -21,8 +21,22 @@
 {% endfor %}
 </h4>
 
+<div class="fav-song">
+  <button id="song-button-{{ song.song_id }}" data-songid="{{ song.song_id }}"" class="fav-btn" {% if not session %}disabled{% endif %}>
+    {% if session %}
+      Favorite
+    {% else %}
+      Login to Favorite
+    {% endif %}
+  </button>
+</div>
+<br>
+
 <div>
   {{ song.body_chords_html|safe }}
 </div>
+
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="/static/js/fav.js"></script>
 
 {% endblock %}
