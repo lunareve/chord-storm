@@ -43,8 +43,8 @@ def user_details(user_id):
     user_songs = []
 
     try:
-        for favorite in user.favorites:
-            user_songs.append(favorite.songs)
+        for favorite in user.songs:
+            user_songs.append(favorite)
 
     except AttributeError:
         print "no favorites"
@@ -170,6 +170,23 @@ def add_favorite():
         'song_id': song_id
         })
 
+
+@app.route("/songs/rem_fav.json", methods=['POST'])
+def remove_favorite():
+    """Remove favorited song to db."""
+
+    song_id = int(request.form.get('song_id'))
+    current_user = session['user']
+
+    # remove data from db that song is a favorite
+    Favorite.query.filter(Favorite.song_id==song_id, Favorite.user_id==current_user).delete()
+    db.session.commit()
+    print "removing song_id {} as favorite in db".format(song_id)
+
+    return jsonify({
+        'success': True,
+        'song_id': song_id
+        })
 
 # @app.route("/songs/<song_id>", methods=["POST"])
 # def rate_song(song_id):
