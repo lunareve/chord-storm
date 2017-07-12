@@ -42,12 +42,8 @@ def user_details(user_id):
     user = User.query.get(user_id)
     user_songs = []
 
-    try:
-        for favorite in user.songs:
-            user_songs.append(favorite)
-
-    except AttributeError:
-        print "no favorites"
+    for favorite in user.songs:
+        user_songs.append(favorite)
 
     songs_list = extract_song_info(user_songs)
 
