@@ -35,6 +35,14 @@
 <div>
   {{ song.body_chords_html|safe }}
 </div>
+<br>
+
+<!-- Youtube embed -->
+<div class="youtube">
+  {% for video in youtube %}
+    {{ video.player.embedHtml|safe }}
+  {% endfor %}
+</div>
 
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="/static/js/fav.js"></script>

@@ -7,9 +7,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Artist, ArtistSong, Song, Chord, SongChord, Favorite
 
-import guitar_party_api as gp
-
 from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_song_info, most_chord_combos, shortest_chord_combos, search_by_title, search_by_artist
+
+from youtube_api import youtube_search
 
 
 app = Flask(__name__)
@@ -143,9 +143,15 @@ def song_details(song_id):
     """Shows a song's details."""
 
     song = Song.query.get(song_id)
+    search_term = {
+            'q': song.title+' guitar tutorial',
+            'max_results': 10
+            }
+    youtube = youtube_search(search_term)
 
     return render_template("song_details.html",
-                           song=song)
+                           song=song,
+                           youtube=youtube)
 
 
 @app.route("/songs/add_fav.json", methods=['POST'])
@@ -183,29 +189,6 @@ def remove_favorite():
         'success': True,
         'song_id': song_id
         })
-
-# @app.route("/songs/<song_id>", methods=["POST"])
-# def rate_song(song_id):
-#     """Allows user to add or update favorite for a song."""
-
-#     song_score = request.form.get("score")
-#     current_song = song_id
-#     current_user = session['user']
-
-#     favorite_exist = db.session.query(favorite).filter(favorite.user_id==current_user,
-#                                                        favorite.song_id==current_song).first()
-
-#     #if user_id exists, update score column in favorites table
-#     if favorite_exist:
-#         favorite_exist.score = song_score
-#         db.session.commit()
-#     else:
-#         new_favorite = favorite(song_id=current_song, user_id=current_user, score=song_score)
-#         db.session.add(new_favorite)
-#         db.session.commit()
-
-#     return redirect("/songs/{}".format(current_song))
-
 
 
 if __name__ == "__main__":

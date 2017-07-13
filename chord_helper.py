@@ -98,7 +98,7 @@ def most_chord_combos():
     chord_combos = query_chord_combos()
     sorted_chords = sorted(chord_combos.items(), key=operator.itemgetter(1), reverse=True)
 
-    return sorted_chords[:5]
+    return sorted_chords[:10]
 
 
 def shortest_chord_combos():
@@ -109,7 +109,7 @@ def shortest_chord_combos():
     chord_combos = query_chord_combos()
 
     for key in chord_combos:
-        if len(key) < 5:
+        if len(key) < 4:
             short_chords.append(key)
 
     short_chords.sort(key=len)
