@@ -11,6 +11,8 @@ from chord_helper import find_songs_with_n_chords, find_songs_chords, extract_so
 
 from youtube_api import youtube_search
 
+import bcrypt
+
 
 app = Flask(__name__)
 
@@ -55,6 +57,7 @@ def user_details(user_id):
 @app.route("/register", methods=["POST"])
 def register_process():
     """Registers new user, checks for existing user"""
+
     # Check for existing user
     email = request.form.get("email")
     password = request.form.get("password")
@@ -67,7 +70,8 @@ def register_process():
         flash('Passwords do not match, please try again.')
 
     else:
-        user = User(email=email, password=password)
+        hashed = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+        user = User(email=email, password=hashed)
         db.session.add(user)
         db.session.commit()
         flash('Successfully registered new user, please login.')
@@ -85,13 +89,15 @@ def login_form():
 @app.route("/login", methods=["POST"])
 def log_user_in():
     """Logs in the user if details match."""
+
     email = request.form.get("email")
     password = request.form.get("password")
+
     # Check db for email and pw
-
     user = User.query.filter(User.email == email).first()
+    check = bcrypt.checkpw(password.encode('utf8'), user.password.encode('utf8'))
 
-    if user and user.password == password:
+    if user and check:
         session['user'] = user.user_id
         flash('Logged in')
         return redirect("/users/{}".format(user.user_id))
@@ -104,7 +110,7 @@ def log_user_in():
 @app.route("/logout")
 def log_user_out():
     """Logs out the user."""
-    # session.clear()
+
     session.pop('user')
     flash('Logged out')
 
