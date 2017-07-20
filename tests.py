@@ -3,6 +3,7 @@
 import json
 from unittest import TestCase
 from server import app
+from model import connect_to_db, db
 
 class FlaskTests(TestCase):
 
@@ -17,7 +18,7 @@ class FlaskTests(TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = 1
+                sess['user'] = 1
 
         # Connect to test database
         connect_to_db(app, "postgresql:///testdb")

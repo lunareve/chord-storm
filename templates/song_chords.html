@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Search by Chords</h2>
-  <div>
-    <form action="/songs" method="GET">
-
-      <label>Chords:
-        <input type="text" name="chord_string">
-      </label>
-
-      <input type="submit">
-
-    </form>
-  </div>
-
 <h3>Search Results:</h3>
 
   {% if songs_list %}

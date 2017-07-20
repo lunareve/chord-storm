@@ -1,25 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Search Songs</h2>
-  <div>
-
-    <form>
-      Search by:
-      <select name="search_type" id="search_type">
-        <option value="chord_string">Chords</option>
-        <option value="title_string">Song Title</option>
-        <option value="artist_string">Artist</option>
-      </select>
-    </form>
-
-    <form action="/songs" id="search_songs" method="GET">
-      <label>
-        <input type="text" id="search_box" name="chord_string">
-      </label>
-      <input type="submit">
-    </form>
-
 <h3>Songs with only 3 chords:</h3>
   <ul>
     {% for song in songs_list %}
@@ -35,15 +16,5 @@
     {% endfor %}
   </ul>
 
-<script src="http://code.jquery.com/jquery.js"></script>
-
-<script type="text/javascript">
-  $('#search_type').on('change', set_search_type);
-  $('#search_type').on('pageshow', set_search_type);
-
-  function set_search_type() {
-    $('#search_box').attr('name', $('#search_type').val());
-  }
-</script>
 
 {% endblock %}

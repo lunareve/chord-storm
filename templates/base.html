@@ -4,6 +4,7 @@
     <title>Chord Storm</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/chordfinder.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery.js"></script>
 </head>
 <body>
   <div class=container>
@@ -26,11 +27,39 @@
       <a href="/login">Login or Register</a>
     {% endif %}
 
+  <h2>Search Songs</h2>
+    <div>
 
+      <form>
+        Search by:
+        <select name="search_type" id="search_type">
+          <option value="chord_string">Chords</option>
+          <option value="title_string">Song Title</option>
+          <option value="artist_string">Artist</option>
+        </select>
+      </form>
+
+      <form action="/songs" id="search_songs" method="GET">
+        <label>
+          <input type="text" id="search_box" name="chord_string">
+        </label>
+        <input type="submit">
+      </form>
+
+    </div>
 
     {% block content %} put your content here {% endblock %}
 
   </div>
+
+  <script type="text/javascript">
+    $('#search_type').on('change', set_search_type);
+    $('#search_type').on('pageshow', set_search_type);
+
+    function set_search_type() {
+      $('#search_box').attr('name', $('#search_type').val());
+    }
+  </script>
 
 </body>
 </html>

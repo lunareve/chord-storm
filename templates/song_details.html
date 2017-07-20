@@ -39,12 +39,38 @@
 
 <!-- Youtube embed -->
 <div class="youtube">
-  {% for video in youtube %}
-    {{ video.player.embedHtml|safe }}
-  {% endfor %}
+  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+    <div class="carousel-inner" role="listbox">
+
+      <div class="item active">
+        {{ youtube[0].player.embedHtml|safe }}
+      </div>
+
+      {% for video in youtube[1:] %}
+      <div class="item">
+        {{ video.player.embedHtml|safe }}
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+    <span class="icon-prev"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+    <span class="icon-next"></span>
+    </a>
+
+  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="/static/js/fav.js"></script>
+<script type="text/javascript">
+  $(function(){
+  $('#carousel-example-generic').carousel();
+  });
+</script>
 
 {% endblock %}
