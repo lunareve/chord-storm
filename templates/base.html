@@ -5,11 +5,63 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/chordfinder.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class=container>
-    <h1><a href="/">Chord Storm</a></h1>
-    <hr>
+
+  <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-static-top navbar-toggleable-md navbar-light bg-faded">
+
+      <a class="navbar-brand" href="/">Chord Storm</a>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <form class="form-inline my-2 my-lg-0 pull-right" action="/songs" id="search_songs" method="GET">
+        <div class="input-group">
+        <div class="input-group-addon">
+            <select class="selectpicker form-control" name="search_type" id="search_type" title="Search by:">
+              <option selected value="chord_string">Chords</option>
+              <option value="title_string">Song Title</option>
+              <option value="artist_string">Artist</option>
+              </select>
+
+            <input type="text" class="form-control" id="search_box" name="chord_string" placeholder="Search Songs">
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="submit">Search</button>
+            </span>
+            </div>
+        </div>
+        </form>
+            <!-- Search by:
+            <select class="form-control mr-sm-2" name="search_type" id="search_type">
+              <option value="chord_string">Chords</option>
+              <option value="title_string">Song Title</option>
+              <option value="artist_string">Artist</option>
+            </select> -->
+
+        <!-- <form class="form-inline my-2 my-lg-0 pull-right" action="/songs" id="search_songs" method="GET">
+          <input class="form-control mr-sm-2" id="search_box" name="chord_string" type="text" placeholder="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form> -->
+
+        <ul class="navbar-nav mr-auto pull-right">
+          {% if session %}
+            <li class="nav-item">
+              <a class="nav-link" href="/users/{{ session['user'] }}">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login or Register</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
     {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul class=flashes>
@@ -19,34 +71,6 @@
       </ul>
     {% endif %}
     {% endwith %}
-
-
-    {% if session %}
-      <a href="/users/{{ session['user'] }}">Profile</a> | <a href="/logout">Logout</a>
-    {% else %}
-      <a href="/login">Login or Register</a>
-    {% endif %}
-
-  <h2>Search Songs</h2>
-    <div>
-
-      <form>
-        Search by:
-        <select name="search_type" id="search_type">
-          <option value="chord_string">Chords</option>
-          <option value="title_string">Song Title</option>
-          <option value="artist_string">Artist</option>
-        </select>
-      </form>
-
-      <form action="/songs" id="search_songs" method="GET">
-        <label>
-          <input type="text" id="search_box" name="chord_string">
-        </label>
-        <input type="submit">
-      </form>
-
-    </div>
 
     {% block content %} put your content here {% endblock %}
 
