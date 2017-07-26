@@ -112,6 +112,7 @@ def log_user_out():
     """Logs out the user."""
 
     session.pop('user')
+    print session
     flash('Logged out')
 
     return redirect("/")

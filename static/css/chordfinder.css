@@ -5,19 +5,22 @@
 body {
     background-size: cover;
     background: url(skullsp.png) center;
+    padding-top: 70px;
+    padding-bottom: 30px;
 }
 
 .navbar {
-    margin-top: 20px;
-    background-color: rgba(76, 6, 90, 0.3)
+    background-color: rgba(76, 6, 90, 0.3);
+    padding: 10px 10px;
+    font-color: black;
 }
 
 .navbar-brand {
     font-size: 36px;
-    padding: 15px 15px 15px 0px;
+    padding: 15px;
+    font-family: 'Permanent Marker', cursive;
 }
 
-.input-group-addon {
-    background-color: rgba(76, 6, 90, 0);
-    border: 0px;
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans Condensed', sans-serif;
 }
