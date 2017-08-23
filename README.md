@@ -29,7 +29,27 @@ $ createdb chordfinder
 $ psql chordfinder < seed_data/chordfinder.sql
 ```
 
-If you’d like to seed the database with your choice of songs, get an API key from [GuitarParty](http://www.guitarparty.com/developers/). 
+If you’d like to seed the database with your choice of songs, get an API key from [GuitarParty](http://www.guitarparty.com/developers/). Create a secrets.sh file to export the key to your environment.
+
+This would also be a good time to get a YouTube API key and add it to the secrets file in the same manner.
+
+```
+export GUITAR_PARTY_API_KEY='secretkeyhere'
+```
+
+Update ```seed_data/u.item``` with desired artists and songs.
+Source the secrets file and run seed.py to seed the database.
+
+```
+$ source secrets.sh
+$ python seed.py
+```
+
+Start the server and access in the browser from ```localhost:5000```.
+
+```
+$ python server.py
+```
 
 ## Built With
 
