@@ -6,11 +6,11 @@
 <form action="/login" method="POST">
 
   <label>Email address:
-    <input type="email" name="email">
+    <input type="email" name="email" required>
   </label>
 
   <label>Password:
-    <input type="password" name="password">
+    <input type="password" name="password" required>
   </label>
 
   <input type="submit">
@@ -22,15 +22,15 @@
 <form action="/register" method="POST">
 
   <label>Email address:
-    <input type="email" name="email">
+    <input type="email" name="email" required>
   </label>
 
   <label>Password:
-    <input type="password" name="password">
+    <input type="password" name="password" required>
   </label>
 
   <label>Retype password:
-    <input type="password" name="verify">
+    <input type="password" name="verify" required>
   </label>
 
   <input type="submit">
