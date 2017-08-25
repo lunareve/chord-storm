@@ -22,7 +22,7 @@
 </h4>
 
 <div class="fav-song">
-  <button id="song-button-{{ song.song_id }}" data-songid="{{ song.song_id }}"" class="fav-btn" {% if not session %}disabled{% endif %}>
+  <button id="song-button-{{ song.song_id }}" data-songid="{{ song.song_id }}" class="btn btn-default fav-btn" {% if not session %}disabled{% endif %}>
     {% if session %}
       Favorite
     {% else %}
